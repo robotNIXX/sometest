@@ -24,13 +24,16 @@ class RegisterRequest extends FormRequest
         return [
             'email' => [
                 'required',
-                'exists:users,email'
+                'unique:users,email',
+                'email'
             ],
             'name' => [
                 'required'
             ],
             'phone' => [
-                'required'
+                'required',
+                'unique:phone_book,phone',
+                'numeric'
             ],
             'country' => [
                 'required'

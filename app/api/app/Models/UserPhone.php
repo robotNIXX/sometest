@@ -15,4 +15,6 @@ class UserPhone extends Model
 
 
     protected $table = 'phone_book';
+
+    protected $fillable = ['phone'];
 }

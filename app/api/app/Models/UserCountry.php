@@ -15,4 +15,6 @@ class UserCountry extends Model
 
     protected $table = 'user_countries';
 
+    protected $fillable = ['country_name'];
+
 }
