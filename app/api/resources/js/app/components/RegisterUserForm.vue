@@ -45,18 +45,23 @@ const registerForm = ref({
   email: ''
 })
 
-const phonePrefix = ref('')
+const phonePrefix = computed(() => selectedCountry.value.idd)
 
 const selectCountry = (el) => {
   const element = countriesStore.countries.filter((item:Country) => {
     return (item.flag + ' ' + item.name).indexOf(el) >= 0
   })
 
-  phonePrefix.value = element[0].idd
+  selectedCountry.value = element[0]
 }
 
 const onSubmit = async () => {
-  await axios.post('/api/auth/register', registerForm.value)
+  await axios.post('/api/auth/register', {
+    name: registerForm.value.name,
+    country: selectedCountry.value.name,
+    phone: selectedCountry.value.idd + registerForm.value.phone,
+    email: registerForm.value.email
+  })
 }
 
 onMounted(() => {
