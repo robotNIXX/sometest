@@ -17,7 +17,7 @@ class UsersService
         $data['password'] = Hash::make('password');
         $user = User::create($data);
         $user->phone()->create([
-            'phone' => $data['phone']
+            'phone' => $data['idd'] . $data['phone']
         ]);
         $user->country()->create([
             'country_name' => $data['country']

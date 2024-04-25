@@ -5,10 +5,11 @@ namespace App\Channels;
 use App\Models\User;
 use App\Services\InforuSMSService;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class SMSChannel
 {
-    public function send($notifiable, Notification $notification)
+    public function send(User $notifiable, Notification $notification)
     {
         $message = $notification->toSMS($notifiable);
 
