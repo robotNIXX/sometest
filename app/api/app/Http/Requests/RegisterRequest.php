@@ -32,8 +32,7 @@ class RegisterRequest extends FormRequest
             ],
             'phone' => [
                 'required',
-                'unique:phone_book,phone',
-                'numeric'
+                'unique:phone_book,phone'
             ],
             'country' => [
                 'required'

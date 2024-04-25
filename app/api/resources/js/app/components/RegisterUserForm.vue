@@ -8,7 +8,7 @@
         <VTextField label="Name" v-model="registerForm.name" :error-messages="errors.name || []"/>
         <VAutocomplete @update:modelValue="selectCountry" v-model="registerForm.country" :items="countriesList"
                        :error-messages="errors.country || []"></VAutocomplete>
-        <VTextField :prefix="phonePrefix" label="Phone" v-model="registerForm.phone"
+        <VTextField v-mask="'## ###-##-##'" :prefix="phonePrefix" label="Phone" v-model="registerForm.phone"
                     :error-messages="errors.phone || []"></VTextField>
         <VTextField label="Email" v-model="registerForm.email" :error-messages="errors.email || []"></VTextField>
         <VBtn class="mt-2" type="submit" block @click="onSubmit">Submit</VBtn>
