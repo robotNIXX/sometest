@@ -19,6 +19,7 @@
 import { VCardTitle } from 'vuetify/components';
 import {computed, onMounted, ref} from "vue";
 import { useCountriesStore } from '../store/countries';
+import axios from "axios";
 
 interface Country {
   name: string
@@ -54,8 +55,8 @@ const selectCountry = (el) => {
   phonePrefix.value = element[0].idd
 }
 
-const onSubmit = () => {
-  console.log(registerForm.value)
+const onSubmit = async () => {
+  await axios.post('/api/auth/register', registerForm.value)
 }
 
 onMounted(() => {
