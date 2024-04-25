@@ -6,8 +6,8 @@
       <VCardItem>
         <VForm fast-fail @submit.prevent>
           <VTextField label="Name" v-model="registerForm.name" />
-          <VAutocomplete v-model="registerForm.country" :items="countriesList"></VAutocomplete>
-          <VTextField label="Phone" v-model="registerForm.phone"></VTextField>
+          <VAutocomplete @update:modelValue="selectCountry" v-model="registerForm.country" :items="countriesList"></VAutocomplete>
+          <VTextField :prefix="phonePrefix" label="Phone" v-model="registerForm.phone"></VTextField>
           <VTextField label="Email" v-model="registerForm.email"></VTextField>
           <VBtn class="mt-2" type="submit" block @click="onSubmit">Submit</VBtn>
         </VForm>
@@ -26,6 +26,12 @@ interface Country {
   idd: string
 }
 
+const selectedCountry = ref({
+  name: '',
+  flag: '',
+  idd: '',
+})
+
 const countriesStore = useCountriesStore()
 const countriesList = computed(() => {
   return countriesStore.countries.map((item: Country) => `${item.flag} ${item.name}`)
@@ -37,6 +43,16 @@ const registerForm = ref({
   phone: '',
   email: ''
 })
+
+const phonePrefix = ref('')
+
+const selectCountry = (el) => {
+  const element = countriesStore.countries.filter((item:Country) => {
+    return (item.flag + ' ' + item.name).indexOf(el) >= 0
+  })
+
+  phonePrefix.value = element[0].idd
+}
 
 const onSubmit = () => {
   console.log(registerForm.value)
