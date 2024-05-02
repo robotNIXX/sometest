@@ -1,22 +1,21 @@
 import './bootstrap';
 
-import {createApp} from 'vue'
+import Vue from 'vue'
 import App from './app/App.vue'
 import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-import VueTheMask from 'vue-the-mask'
-
-import { createPinia } from 'pinia'
+import VueMask from 'v-mask'
+import Vuetify from 'vuetify'
 
 
+import { createPinia, PiniaVuePlugin } from 'pinia'
+Vue.use(PiniaVuePlugin)
+Vue.use(Vuetify)
+Vue.use(VueMask)
 const pinia = createPinia()
-
-const vuetify = createVuetify({
-  components,
-  directives
-})
-
-createApp(App).use(vuetify).use(pinia).use(VueTheMask).mount('#app')
+const vuetify = new Vuetify()
+// createApp(App).use(Vuetify).use(pinia).use(VueTheMask).mount('#app')
+new Vue({
+    vuetify,
+    pinia,
+    render: (h) => h(App),
+}).$mount('#app')

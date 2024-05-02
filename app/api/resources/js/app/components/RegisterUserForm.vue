@@ -3,84 +3,93 @@
     <VCardTitle>
       Register form
     </VCardTitle>
-    <VCardItem>
+    <VCardText>
       <VForm fast-fail @submit.prevent>
         <VTextField label="Name" v-model="registerForm.name" :error-messages="errors.name || []"/>
-        <VAutocomplete @update:modelValue="selectCountry" v-model="registerForm.country" :items="countriesList"
+        <VAutocomplete @change="selectCountry" v-model="registerForm.country" :items="countriesList"
                        :error-messages="errors.country || []"></VAutocomplete>
         <VTextField v-mask="'## ###-##-##'" :prefix="phonePrefix" label="Phone" v-model="registerForm.phone"
                     :error-messages="errors.phone || []"></VTextField>
         <VTextField label="Email" v-model="registerForm.email" :error-messages="errors.email || []"></VTextField>
-        <VBtn class="mt-2" type="submit" block @click="onSubmit">Submit</VBtn>
+        <VBtn type="submit" block @click="onSubmit">Submit</VBtn>
       </VForm>
-    </VCardItem>
+    </VCardText>
   </VCard>
 </template>
 
-<script setup lang="ts">
-import {VCardTitle} from 'vuetify/components';
-import {computed, onMounted, ref} from "vue";
+<script>
+import {VCard, VForm, VCardTitle, VTextField, VCardText, VAutocomplete, VBtn} from "vuetify/lib/components";
 import {useCountriesStore} from '../store/countries';
 import axios from "axios";
-import {da} from "vuetify/locale";
 
-interface Country {
-  name: string
-  flag: string
-  idd: string
-}
 
-const selectedCountry = ref({
-  name: '',
-  flag: '',
-  idd: '',
-})
+export default({
+  name: 'RegisterUserForm',
+  components: {
+    VCard,
+    VCardText,
+    VForm,
+    VCardTitle,
+    VTextField, VAutocomplete,
+    VBtn
+  },
+  data: () => ({
+    selectedCountry: null,
+    countries: [],
+    registerForm: {
+      name: '',
+      country: '',
+      phone: '',
+      email: ''
+    },
+    errors: {},
+    phonePrefix: ''
+  }),
+  methods: {
+    selectCountry(el) {
+      const element = this.countries.filter((item) => {
+        return (item.flag + ' ' + item.name).indexOf(el) >= 0
+      })
 
-const countriesStore = useCountriesStore()
-const countriesList = computed(() => {
-  return countriesStore.countries.map((item: Country) => `${item.flag} ${item.name}`)
-})
+      this.selectedCountry = element[0]
+      cons
+    },
+    async onSubmit () {
+      await axios.post('/api/auth/register', {
+        name: this.registerForm.name ?? '',
+        country: this.selectedCountry ? this.selectedCountry.name : '',
+        phone: this.registerForm.phone ?? '',
+        idd: this.selectedCountry ? this.selectedCountry.idd : '',
+        email: this.registerForm.email ?? ''
+      }).catch((res) => {
+        this.generateErrors(res.response.data)
+      })
+    },
+    generateErrors(data) {
+      this.errors = {}
+      if (data.errors) {
+        this.errors = data.errors
+      }
+    }
+  },
+  watch: {
+    selectedCountry(value) {
+      this.phonePrefix = value.idd
+    }
+  },
+  computed: {
+    countriesList() {
+      const list = this.countries.map((item) => {
+        return item.flag + ' ' + item.name
+      })
 
-const registerForm = ref({
-  name: '',
-  country: '',
-  phone: '',
-  email: ''
-})
-
-const errors = ref({})
-
-const phonePrefix = computed(() => selectedCountry.value.idd)
-
-const selectCountry = (el) => {
-  const element = countriesStore.countries.filter((item: Country) => {
-    return (item.flag + ' ' + item.name).indexOf(el) >= 0
-  })
-
-  selectedCountry.value = element[0]
-}
-
-const onSubmit = async () => {
-  await axios.post('/api/auth/register', {
-    name: registerForm.value.name,
-    country: selectedCountry.value.name,
-    phone: registerForm.value.phone,
-    idd: selectedCountry.value.idd,
-    email: registerForm.value.email
-  }).catch((res) => {
-    generateErrors(res.response.data)
-  })
-}
-
-const generateErrors = (data) => {
-  errors.value = []
-  if (data.errors) {
-    errors.value = data.errors
+      return list
+    }
+  },
+  mounted() {
+    useCountriesStore().fetchCountries()
+    this.countries = useCountriesStore().getCountries
   }
-}
-
-onMounted(() => {
-  countriesStore.fetchCountries()
 })
 
 </script>

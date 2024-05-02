@@ -1,17 +1,22 @@
-
 <template>
-    <VApp>
-        <VMain class="d-flex justify-center">
-          <VContainer >
+    <v-app  id="app">
+      <VMain>
+          <v-container >
             <RegisterUserForm/>
-          </VContainer>
-        </VMain>
-    </VApp>
+          </v-container>
+      </VMain>
+    </v-app>
 </template>
 
-<script setup lang="ts">
-
-import { VApp } from 'vuetify/components';
+<script>
+import {VApp, VMain, VContainer} from "vuetify/lib/components"
 import RegisterUserForm from './components/RegisterUserForm.vue'
+
+export default ({
+  name: 'App',
+  components: {
+    RegisterUserForm,VApp, VMain, VContainer
+  },
+})
 
 </script>

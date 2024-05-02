@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import axios from "axios";
-import {APIResponse} from "../types/ApiResponse";
 
 
 export  const useCountriesStore = defineStore('countries', {
