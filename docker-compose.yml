@@ -61,7 +61,7 @@ services:
         - ./app/api:/var/www
   mailpit:
     image: axllent/mailpit:latest
-    container_name: fakeSMTP
+    container_name: fakeSMTP1
     restart: always
     volumes:
       - ./data/mailplit:/data
